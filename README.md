@@ -1,22 +1,37 @@
-# ProsePolish — Write Naturally. Send Professionally.
+<p align="center">
+  <h1 align="center">✨ ProsePolish</h1>
+  <p align="center"><em>Write Naturally. Send Professionally.</em></p>
+</p>
 
-## Overview
+<p align="center">
+  <img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="Python 3.10+">
+  <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License: MIT">
+  <img src="https://img.shields.io/badge/status-active-success.svg" alt="Status: Active">
+</p>
+
+---
+
+## 📖 Overview
 
 ProsePolish is an **informal-to-professional email drafter** powered by a multi-agent LLM pipeline. Type casually as if texting a friend, select your tone, length, and recipient, and ProsePolish transforms your words into a polished, ready-to-send professional email — complete with a quality score and full transparency into how each agent refined the text.
 
-## Features
+---
 
-- **4-agent LLM pipeline** for iterative refinement — analysis → draft → polish → quality review
-- **5 tone options** — Formal, Friendly, Persuasive, Diplomatic, Apologetic
-- **3 length options** — Short, Medium, Long
-- **5 recipient types** — Boss, Client, Colleague, Professor, Stranger
-- **Gmail-inspired side-by-side UI** — casual input on the left, professional output on the right
-- **Quality score (1–10)** with a color-coded badge (green / yellow / red)
-- **Copy-to-clipboard** with toast notifications for success and error states
-- **Transparent "See how it was made"** toggle revealing each agent's intermediate output
-- **Responsive design** — panels stack vertically on screens narrower than 768px
+## ✨ Features
 
-## Architecture
+- 🔄 **4-agent LLM pipeline** — analysis → draft → polish → quality review
+- 🎭 **5 tone options** — Formal, Friendly, Persuasive, Diplomatic, Apologetic
+- 📏 **3 length options** — Short, Medium, Long
+- 👤 **5 recipient types** — Boss, Client, Colleague, Professor, Stranger
+- 📧 **Gmail-inspired side-by-side UI** — casual input on the left, professional output on the right
+- ⭐ **Quality score (1–10)** with a color-coded badge (green / yellow / red)
+- 📋 **Copy-to-clipboard** with toast notifications for success and error states
+- 🔍 **"See how it was made"** toggle revealing each agent's intermediate output
+- 📱 **Responsive design** — panels stack vertically on screens narrower than 768px
+
+---
+
+## 🧠 Architecture
 
 ```
 ┌──────────────┐     ┌──────────────┐     ┌───────────────────────────────────┐
@@ -31,26 +46,30 @@ ProsePolish is an **informal-to-professional email drafter** powered by a multi-
                                           └───────────────────────────────────┘
 ```
 
-### 4-Agent Pipeline Flow
+### 🔗 4-Agent Pipeline Flow
 
 | # | Agent | Responsibility |
 |---|-------|----------------|
-| 1 | **Context Analyzer** | Parses the casual input to identify intent, urgency, target tone, and key points. Returns structured JSON. |
-| 2 | **Draft Generator** | Converts the original text into a full email draft, guided by the context analysis, selected tone, length, and recipient type. |
-| 3 | **Polisher** | Refines the draft — corrects grammar, replaces informal words, improves sentence flow, and ensures proper email etiquette. |
-| 4 | **QC Checker** | Reviews the final email against 5 quality criteria, assigns a 1–10 score, and conditionally rewrites if the score falls below 7. |
+| 1 | 🔎 **Context Analyzer** | Parses the casual input to identify intent, urgency, target tone, and key points. Returns structured JSON. |
+| 2 | ✍️ **Draft Generator** | Converts the original text into a full email draft, guided by the context analysis, selected tone, length, and recipient type. |
+| 3 | 🪄 **Polisher** | Refines the draft — corrects grammar, replaces informal words, improves sentence flow, and ensures proper email etiquette. |
+| 4 | ✅ **QC Checker** | Reviews the final email against 5 quality criteria, assigns a 1–10 score, and conditionally rewrites if the score falls below 7. |
 
-## Tech Stack
+---
+
+## 🛠 Tech Stack
 
 | Layer | Technology |
 |-------|------------|
 | **Backend** | Python 3.10+, FastAPI, OpenRouter API (Gemini, GPT, Claude, etc.), Pydantic |
 | **Frontend** | Vanilla HTML / CSS / JavaScript, Google Fonts (Roboto) |
 
-## Project Structure
+---
+
+## 📁 Project Structure
 
 ```
-Cool_Useful/
+ProsePolish/
 ├── README.md
 ├── backend/
 │   ├── main.py                  # FastAPI server
@@ -72,18 +91,20 @@ Cool_Useful/
         └── app.js               # UI logic & API integration
 ```
 
-## Getting Started
+---
 
-### Prerequisites
+## 🚀 Getting Started
+
+### 📋 Prerequisites
 
 - **Python 3.10+**
 - **OpenRouter API key** ([get one free](https://openrouter.ai/keys)) — gives access to 200+ models
 
-### Setup
+### ⚙️ Setup
 
 ```bash
 # 1. Clone and enter the project
-cd Cool_Useful
+cd ProsePolish
 
 # 2. Install Python dependencies
 cd backend
@@ -99,9 +120,11 @@ python main.py
 
 Then open `frontend/index.html` in a browser, or serve it with any static server.
 
-> **Note:** The frontend calls the backend at `http://localhost:8000` by default. If your backend runs elsewhere, update `API_BASE_URL` in `frontend/js/app.js`.
+> ⚠️ **Note:** The frontend calls the backend at `http://localhost:8000` by default. If your backend runs elsewhere, update `API_BASE_URL` in `frontend/js/app.js`.
 
-## API Reference
+---
+
+## 📡 API Reference
 
 ### `POST /api/transform`
 
@@ -120,10 +143,10 @@ Transforms casual text into a professional email.
 
 | Field | Type | Values | Description |
 |-------|------|--------|-------------|
-| `text` | string | 1–5000 chars | Casual / informal input text |
-| `tone` | string | `formal`, `friendly`, `persuasive`, `diplomatic`, `apologetic` | Desired email tone |
-| `length` | string | `short`, `medium`, `long` | Desired email length |
-| `recipient` | string | `boss`, `client`, `colleague`, `professor`, `stranger` | Target recipient relationship |
+| `text` | `string` | 1–5000 chars | Casual / informal input text |
+| `tone` | `string` | `formal`, `friendly`, `persuasive`, `diplomatic`, `apologetic` | Desired email tone |
+| `length` | `string` | `short`, `medium`, `long` | Desired email length |
+| `recipient` | `string` | `boss`, `client`, `colleague`, `professor`, `stranger` | Target recipient relationship |
 
 **Response**
 
@@ -140,7 +163,7 @@ Transforms casual text into a professional email.
     "key_points": ["check report receipt", "no rush", "confirmation requested"]
   },
   "intermediate_steps": [
-    { "stage": "context_analysis", "output": { "intent": "follow-up", "urgency": "low", ... } },
+    { "stage": "context_analysis", "output": { "intent": "follow-up", "urgency": "low" } },
     { "stage": "draft", "output": "Dear ..., \n\nI hope you are well..." },
     { "stage": "polished", "output": "Dear ..., \n\nI hope this message..." },
     { "stage": "qc_review", "output": { "score": 8, "feedback": "...", "final_email": "..." } }
@@ -158,9 +181,11 @@ Returns server health status.
 { "status": "ok" }
 ```
 
-## Customization
+---
 
-### Change the LLM model
+## 🎨 Customization
+
+### 🤖 Change the LLM model
 
 OpenRouter gives you access to hundreds of models. Set the `OPENROUTER_MODEL` environment variable in `backend/.env`:
 
@@ -174,7 +199,7 @@ OPENROUTER_MODEL=google/gemini-2.5-flash-lite
 # OPENROUTER_MODEL=google/gemini-2.5-pro
 ```
 
-### Custom API endpoint (self-hosted, Ollama, etc.)
+### 🔌 Custom API endpoint (self-hosted, Ollama, etc.)
 
 Point `OPENROUTER_BASE_URL` to any OpenAI-compatible endpoint:
 
@@ -182,10 +207,18 @@ Point `OPENROUTER_BASE_URL` to any OpenAI-compatible endpoint:
 OPENROUTER_BASE_URL=http://localhost:11434/v1
 ```
 
-### Tune agent prompts
+### 🧩 Tune agent prompts
 
 Each agent's system prompt is defined at the top of its file in `backend/agents/`. For example, to make the polisher more aggressive about formality, edit `SYSTEM_PROMPT` in `backend/agents/polisher.py`. The draft generator also contains `TONE_GUIDELINES`, `LENGTH_GUIDELINES`, and `RECIPIENT_GUIDELINES` dictionaries you can customize at the top of `backend/agents/draft_generator.py`.
 
-## License
+---
 
-MIT
+## 📄 License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ for cleaner communication</sub>
+</p>
