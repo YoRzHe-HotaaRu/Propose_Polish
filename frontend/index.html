@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProsePolish — Informal-to-Professional Email Drafter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <svg class="header-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+                <path d="M2 7l10 7 10-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <h1 class="header-title">ProsePolish</h1>
+        </div>
+        <button class="header-btn" title="Settings" aria-label="Settings">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>
+        </button>
+    </header>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <div class="toolbar-left">
+            <div class="select-group">
+                <label for="tone-select">Tone</label>
+                <select id="tone-select">
+                    <option value="formal">Formal</option>
+                    <option value="friendly">Friendly</option>
+                    <option value="persuasive">Persuasive</option>
+                    <option value="diplomatic">Diplomatic</option>
+                    <option value="apologetic">Apologetic</option>
+                </select>
+            </div>
+            <div class="select-group">
+                <label for="length-select">Length</label>
+                <select id="length-select">
+                    <option value="short">Short</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="long">Long</option>
+                </select>
+            </div>
+            <div class="select-group">
+                <label for="recipient-select">Recipient</label>
+                <select id="recipient-select">
+                    <option value="boss">Boss</option>
+                    <option value="client">Client</option>
+                    <option value="colleague">Colleague</option>
+                    <option value="professor">Professor</option>
+                    <option value="stranger">Stranger</option>
+                </select>
+            </div>
+        </div>
+        <button id="transform-btn" class="btn-transform" onclick="transformText()">
+            <span class="btn-sparkle">✨</span>
+            <span id="transform-btn-text">Transform</span>
+        </button>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- LEFT PANEL -->
+        <section class="panel panel-left">
+            <div class="panel-header">
+                <div class="panel-header-title">
+                    <span class="panel-icon">📝</span>
+                    <h2>Your Words</h2>
+                </div>
+                <p class="panel-subtitle">Write naturally — we'll make it professional</p>
+            </div>
+            <div class="panel-body">
+                <textarea id="casual-input" class="casual-textarea" placeholder="e.g., hey just wanted to check if you got my report, no rush though" oninput="updateCharCount()" maxlength="5000"></textarea>
+                <div class="char-count"><span id="char-count">0</span> / 5000</div>
+            </div>
+        </section>
+
+        <!-- RIGHT PANEL -->
+        <section class="panel panel-right">
+            <div class="panel-header">
+                <div class="panel-header-title">
+                    <span class="panel-icon">📧</span>
+                    <h2>Professional Email</h2>
+                </div>
+                <p class="panel-subtitle" id="settings-label">Formal · Medium · Boss</p>
+            </div>
+            <div class="panel-body" id="output-body">
+                <!-- Empty State -->
+                <div id="empty-state" class="empty-state">
+                    <span class="empty-icon">📧</span>
+                    <p class="empty-text">Your professional email will appear here</p>
+                </div>
+
+                <!-- Result -->
+                <div id="result-state" class="result-state" style="display:none;">
+                    <div class="output-toolbar">
+                        <button class="btn-copy" onclick="copyToClipboard()" title="Copy to clipboard">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                            Copy
+                        </button>
+                    </div>
+                    <div class="email-preview">
+                        <div class="email-field">
+                            <span class="email-label">To:</span>
+                            <span class="email-value" id="email-to"></span>
+                        </div>
+                        <div class="email-field">
+                            <span class="email-label">Subject:</span>
+                            <span class="email-value" id="email-subject"></span>
+                        </div>
+                        <div class="email-body" id="email-body"></div>
+                    </div>
+                    <div class="score-badge" id="score-badge">
+                        <span class="score-label">Quality</span>
+                        <span class="score-value" id="score-value"></span>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loading-state" class="loading-state" style="display:none;">
+                    <div class="loading-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="progress-stages" id="progress-stages">
+                        <div class="progress-stage">
+                            <span class="stage-icon">🔍</span>
+                            <span class="stage-text">Analyzing context...</span>
+                        </div>
+                        <div class="progress-stage">
+                            <span class="stage-icon">✍️</span>
+                            <span class="stage-text">Drafting email...</span>
+                        </div>
+                        <div class="progress-stage">
+                            <span class="stage-icon">✨</span>
+                            <span class="stage-text">Polishing language...</span>
+                        </div>
+                        <div class="progress-stage">
+                            <span class="stage-icon">✅</span>
+                            <span class="stage-text">Quality checking...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error State -->
+                <div id="error-state" class="error-state" style="display:none;">
+                    <span class="error-icon">⚠️</span>
+                    <p class="error-text" id="error-message">Something went wrong. Please try again.</p>
+                    <button class="btn-retry" onclick="transformText()">Retry</button>
+                </div>
+            </div>
+
+            <!-- Intermediate Steps -->
+            <div class="intermediate-section" id="intermediate-section" style="display:none;">
+                <button class="intermediate-toggle" onclick="toggleIntermediateSteps()">
+                    <span id="toggle-icon">▶</span>
+                    See how it was made
+                </button>
+                <div class="intermediate-content" id="intermediate-content" style="display:none;">
+                    <div class="step-card" id="step-context">
+                        <h4>Context Analysis</h4>
+                        <div class="step-body" id="step-context-body"></div>
+                    </div>
+                    <div class="step-card" id="step-draft">
+                        <h4>Initial Draft</h4>
+                        <div class="step-body" id="step-draft-body"></div>
+                    </div>
+                    <div class="step-card" id="step-polished">
+                        <h4>Polished Version</h4>
+                        <div class="step-body" id="step-polished-body"></div>
+                    </div>
+                    <div class="step-card" id="step-qc">
+                        <h4>QC Review</h4>
+                        <div class="step-body" id="step-qc-body"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
