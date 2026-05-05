@@ -34,6 +34,7 @@ class TransformResponse(BaseModel):
     final_email: str
     score: int
     feedback: str
+    language: str = "en"
     analysis: dict
     intermediate_steps: list[IntermediateStep]
     tokens_used: int
@@ -58,6 +59,7 @@ async def transform_email(req: TransformRequest):
         final_email=result.get("final_email", ""),
         score=result.get("score", 0),
         feedback=result.get("feedback", ""),
+        language=result.get("analysis", {}).get("language", "en"),
         analysis=result.get("analysis", {}),
         intermediate_steps=[
             IntermediateStep(stage=s["stage"], output=s["output"])

@@ -7,6 +7,7 @@ Consider these guidelines:
 - Recipient type affects the greeting and level of formality
 - Length affects how much detail to include
 - The context analysis tells you the intent, urgency, and key points
+- Write the email in the SAME language as the original input text. If the input is in Malay, write in Malay. If Chinese, write in Chinese. Match the detected language exactly.
 
 Return ONLY the email draft text. Do not include explanations, subject lines, or metadata — just the raw email body starting with the greeting."""
 

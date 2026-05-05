@@ -435,7 +435,29 @@ function capitalize(str) {
 }
 
 // ============================================
+// Theme Toggle
+// ============================================
+function toggleTheme() {
+    var root = document.documentElement;
+    if (root.classList.contains('dark')) {
+        root.classList.remove('dark');
+        localStorage.setItem('prosepolish-theme', 'light');
+    } else {
+        root.classList.add('dark');
+        localStorage.setItem('prosepolish-theme', 'dark');
+    }
+}
+
+function initTheme() {
+    var saved = localStorage.getItem('prosepolish-theme');
+    if (saved === 'dark') {
+        document.documentElement.classList.add('dark');
+    }
+}
+
+// ============================================
 // Initialization
 // ============================================
+initTheme();
 updateSettingsLabel();
 updateCharCount();

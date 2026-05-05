@@ -713,6 +713,65 @@ body {
 }
 
 /* ============================================
+   Dark Theme
+   ============================================ */
+:root.dark {
+    --bg-primary: #1e1e1e;
+    --bg-white: #2d2d2d;
+    --text-primary: #e8eaed;
+    --text-secondary: #9aa0a6;
+    --text-muted: #80868b;
+    --border-color: #3c4043;
+    --border-light: #3c4043;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+:root.dark .casual-textarea {
+    color: var(--text-primary);
+}
+:root.dark .casual-textarea:focus {
+    background: #353535;
+}
+:root.dark .casual-textarea::placeholder {
+    color: #666;
+}
+:root.dark .email-preview:hover {
+    background: #333;
+}
+:root.dark .select-group select {
+    background-color: #2d2d2d;
+    color: var(--text-primary);
+}
+:root.dark .btn-copy {
+    color: var(--text-secondary);
+}
+:root.dark .btn-copy:hover {
+    background: #353535;
+}
+:root.dark .progress-stage {
+    background: #353535;
+}
+:root.dark .progress-stage.active {
+    background: #1a3a5c;
+}
+:root.dark .progress-stage.completed {
+    background: #1a3a2a;
+}
+:root.dark .step-card {
+    background: #353535;
+}
+:root.dark .intermediate-toggle:hover {
+    background: #353535;
+}
+:root.dark .char-count {
+    background: var(--bg-white);
+}
+:root.dark .score-badge {
+    background: #353535;
+}
+
+/* ============================================
    Responsive — Stack on narrow screens
    ============================================ */
 @media (max-width: 768px) {
