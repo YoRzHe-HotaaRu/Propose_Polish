@@ -940,6 +940,92 @@ body {
 }
 
 /* ============================================
+   Guest Limit Modal
+   ============================================ */
+.modal-guest-limit {
+    text-align: center;
+    max-width: 460px;
+}
+
+.guest-limit-icon {
+    margin-bottom: 16px;
+}
+
+.guest-limit-title {
+    font-size: 20px !important;
+    margin-bottom: 6px !important;
+}
+
+.guest-limit-subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.guest-limit-benefits {
+    text-align: left;
+    background: #f8f9fa;
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+}
+
+.guest-limit-benefit {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+.guest-limit-check {
+    color: var(--score-green);
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.guest-limit-btn {
+    width: 100%;
+    padding: 12px 24px;
+    background: var(--btn-primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 600;
+    font-family: var(--font-family);
+    cursor: pointer;
+    transition: background var(--transition-fast), box-shadow var(--transition-fast);
+    margin-bottom: 12px;
+}
+.guest-limit-btn:hover {
+    background: var(--btn-primary-hover);
+    box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+}
+
+.guest-limit-footer {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+.guest-limit-footer a {
+    color: var(--btn-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+.guest-limit-footer a:hover {
+    text-decoration: underline;
+}
+
+.guest-limit-trust {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* ============================================
    Pricing Cards
    ============================================ */
 .pricing-grid {
@@ -1139,6 +1225,12 @@ body {
 }
 :root.dark .language-badge {
     background: #1a3a5c;
+}
+:root.dark .guest-limit-benefits {
+    background: #353535;
+}
+:root.dark .guest-limit-icon svg rect:first-child {
+    fill: #1a3a5c;
 }
 
 /* ============================================

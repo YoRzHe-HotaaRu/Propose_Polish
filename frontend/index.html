@@ -107,6 +107,49 @@
         </div>
     </div>
 
+    <!-- GUEST LIMIT MODAL -->
+    <div class="modal-overlay" id="guest-limit-modal-overlay" style="display:none;">
+        <div class="modal modal-guest-limit" id="guest-limit-modal">
+            <button class="modal-close" onclick="closeGuestLimitModal()">&times;</button>
+            <div class="guest-limit-icon">
+                <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+                    <rect x="8" y="14" width="40" height="28" rx="4" fill="#e8f0fe" stroke="#1a73e8" stroke-width="2"/>
+                    <path d="M8 19l20 14 20-14" stroke="#1a73e8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="42" cy="14" r="12" fill="#34a853" stroke="white" stroke-width="2"/>
+                    <path d="M38 14l2.5 2.5 5-3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h2 class="modal-title guest-limit-title">Your Free Trial is Complete</h2>
+            <p class="guest-limit-subtitle">Create a free account to unlock professional email drafting every day</p>
+            <div class="guest-limit-benefits">
+                <div class="guest-limit-benefit">
+                    <span class="guest-limit-check">&#10003;</span>
+                    <span>5 free professional emails per day</span>
+                </div>
+                <div class="guest-limit-benefit">
+                    <span class="guest-limit-check">&#10003;</span>
+                    <span>Formal &amp; Friendly tone styles</span>
+                </div>
+                <div class="guest-limit-benefit">
+                    <span class="guest-limit-check">&#10003;</span>
+                    <span>AI-powered quality scoring</span>
+                </div>
+                <div class="guest-limit-benefit">
+                    <span class="guest-limit-check">&#10003;</span>
+                    <span>Email draft with one click</span>
+                </div>
+            </div>
+            <button class="guest-limit-btn" onclick="closeGuestLimitModal(); switchAuthTab('signup'); showAuthModal();">
+                Create Free Account &#8594;
+            </button>
+            <p class="guest-limit-footer">
+                Already have an account?
+                <a href="#" onclick="closeGuestLimitModal(); switchAuthTab('login'); showAuthModal();">Login</a>
+            </p>
+            <p class="guest-limit-trust">No credit card required &middot; Free forever plan</p>
+        </div>
+    </div>
+
     <!-- SUBSCRIPTION MODAL -->
     <div class="modal-overlay" id="sub-modal-overlay" style="display:none;">
         <div class="modal modal-wide" id="sub-modal">

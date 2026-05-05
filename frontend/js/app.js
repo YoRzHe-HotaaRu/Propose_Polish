@@ -66,6 +66,7 @@ const dom = {
     authLogin: $('#auth-login'),
     authSignup: $('#auth-signup'),
     subModalOverlay: $('#sub-modal-overlay'),
+    guestLimitModalOverlay: $('#guest-limit-modal-overlay'),
     pricingGrid: $('#pricing-grid'),
     headerUser: $('#header-user'),
     headerLoginBtn: $('#header-login-btn'),
@@ -288,6 +289,14 @@ function closeSubModal() {
     dom.subModalOverlay.style.display = 'none';
 }
 
+function showGuestLimitModal() {
+    dom.guestLimitModalOverlay.style.display = '';
+}
+
+function closeGuestLimitModal() {
+    dom.guestLimitModalOverlay.style.display = 'none';
+}
+
 function buildPricingCards(tiers, currentTier) {
     if (!tiers || !tiers.length) return;
     var tierOrder = { free: 0, pro: 1, premium: 2 };
@@ -505,8 +514,7 @@ var transformText = debounce(function transformTextInternal() {
     if (!state.idToken && firebaseAuth) {
         var guestUsed = localStorage.getItem('prosepolish-guest-used');
         if (guestUsed) {
-            showToast('Anda telah menggunakan percubaan percuma. Daftar untuk dapatkan 5 emel percuma/hari!', 'error');
-            setTimeout(function () { showAuthModal(); }, 1500);
+            showGuestLimitModal();
             return;
         }
     }
@@ -574,8 +582,7 @@ var transformText = debounce(function transformTextInternal() {
             fetchSubscription();
             if (isGuest) {
                 localStorage.setItem('prosepolish-guest-used', '1');
-                showToast('Percubaan percuma tamat. Daftar percuma untuk 5 emel/hari!', 'success');
-                setTimeout(function () { showAuthModal(); }, 1000);
+                showToast('Free trial used. Sign up to unlock 5 free emails every day!', 'success');
             }
         })
         .catch(function (err) {
@@ -761,6 +768,9 @@ dom.authModalOverlay.addEventListener('click', function (e) {
 });
 dom.subModalOverlay.addEventListener('click', function (e) {
     if (e.target === dom.subModalOverlay) closeSubModal();
+});
+dom.guestLimitModalOverlay.addEventListener('click', function (e) {
+    if (e.target === dom.guestLimitModalOverlay) closeGuestLimitModal();
 });
 
 // ============================================
