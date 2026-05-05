@@ -13,6 +13,15 @@ const state = {
     subscription: { tier: 'free', daily_usage: 0, daily_limit: 5 },
 };
 
+function getAnonymousUid() {
+    var uid = localStorage.getItem('prosepolish-anon-uid');
+    if (!uid) {
+        uid = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('prosepolish-anon-uid', uid);
+    }
+    return uid;
+}
+
 // ============================================
 // Firebase Init
 // ============================================
@@ -132,7 +141,7 @@ function updateAuthUI() {
 
 function updateSubUI() {
     var s = state.subscription;
-    dom.headerTierBadge.textContent = s.tier === 'free' ? 'Percuma' : s.tier === 'pro' ? 'Pro' : 'Premium';
+    dom.headerTierBadge.textContent = s.tier === 'free' ? 'Free' : s.tier === 'pro' ? 'Pro' : 'Premium';
     dom.headerTierBadge.className = 'header-tier-badge tier-' + s.tier;
     dom.headerTierBadge.style.display = '';
 
@@ -142,8 +151,8 @@ function updateSubUI() {
     if (s.tier === 'free' || (s.daily_usage >= s.daily_limit && s.tier !== 'premium')) {
         var remaining = Math.max(0, s.daily_limit - s.daily_usage);
         dom.subBannerText.textContent = remaining === 0
-            ? 'Had harian tercapai (' + s.daily_usage + '/' + s.daily_limit + '). Upgrade untuk terus menulis.'
-            : 'Baki ' + remaining + ' emel hari ini. Upgrade untuk lebih banyak.';
+            ? 'Daily limit reached (' + s.daily_usage + '/' + s.daily_limit + '). Upgrade to continue writing.'
+            : remaining + ' emails remaining today. Upgrade for more.';
         dom.subBanner.style.display = '';
     } else {
         dom.subBanner.style.display = 'none';
@@ -173,7 +182,7 @@ function fetchSubscription() {
 
 function upgradeSubscription(tier) {
     if (!state.idToken) {
-        showToast('Sila log masuk dahulu', 'error');
+        showToast('Please login first', 'error');
         return;
     }
     fetch(API_BASE_URL + '/api/subscription/upgrade?tier=' + encodeURIComponent(tier), {
@@ -182,12 +191,12 @@ function upgradeSubscription(tier) {
     })
         .then(function (r) { return r.json(); })
         .then(function () {
-            showToast('Tahap dinaik taraf ke ' + tier + '!', 'success');
+            showToast('Upgraded to ' + tier + '!', 'success');
             closeSubModal();
             fetchSubscription();
         })
         .catch(function () {
-            showToast('Gagal menaik taraf', 'error');
+            showToast('Upgrade failed', 'error');
         });
 }
 
@@ -223,18 +232,18 @@ function handleLogin(e) {
     var password = $('#login-password').value;
     var btn = $('#login-submit-btn');
     btn.disabled = true;
-    btn.textContent = 'Log masuk...';
+    btn.textContent = 'Logging in...';
     firebaseAuth.signInWithEmailAndPassword(email, password)
         .then(function () {
             closeAuthModal();
-            showToast('Berjaya log masuk!', 'success');
+            showToast('Logged in successfully!', 'success');
         })
         .catch(function (err) {
-            showToast('Gagal: ' + err.message, 'error');
+            showToast('Error: ' + err.message, 'error');
         })
         .finally(function () {
             btn.disabled = false;
-            btn.textContent = 'Log Masuk';
+            btn.textContent = 'Login';
         });
 }
 
@@ -244,18 +253,18 @@ function handleSignup(e) {
     var password = $('#signup-password').value;
     var btn = $('#signup-submit-btn');
     btn.disabled = true;
-    btn.textContent = 'Mendaftar...';
+    btn.textContent = 'Signing up...';
     firebaseAuth.createUserWithEmailAndPassword(email, password)
         .then(function () {
             closeAuthModal();
-            showToast('Akaun berjaya didaftarkan!', 'success');
+            showToast('Account created successfully!', 'success');
         })
         .catch(function (err) {
-            showToast('Gagal: ' + err.message, 'error');
+            showToast('Error: ' + err.message, 'error');
         })
         .finally(function () {
             btn.disabled = false;
-            btn.textContent = 'Daftar';
+            btn.textContent = 'Sign Up';
         });
 }
 
@@ -264,16 +273,16 @@ function handleGoogleLogin() {
     firebaseAuth.signInWithPopup(provider)
         .then(function () {
             closeAuthModal();
-            showToast('Berjaya log masuk!', 'success');
+            showToast('Logged in successfully!', 'success');
         })
         .catch(function (err) {
-            showToast('Gagal: ' + err.message, 'error');
+            showToast('Error: ' + err.message, 'error');
         });
 }
 
 function handleLogout() {
     firebaseAuth.signOut().then(function () {
-        showToast('Log keluar berjaya', 'success');
+        showToast('Logged out successfully', 'success');
     });
 }
 
@@ -306,17 +315,17 @@ function buildPricingCards(tiers, currentTier) {
         var t = tiers[i];
         var isCurrent = t.id === currentTier;
         var isLower = (tierOrder[t.id] || 0) < currentLevel;
-        var priceText = t.price_rm === 0 ? 'PERCUMA' : 'RM ' + t.price_rm.toFixed(2) + ' / bulan';
+        var priceText = t.price_rm === 0 ? 'FREE' : 'RM ' + t.price_rm.toFixed(2) + ' / month';
         var ctaText;
         var disabled = false;
         if (isCurrent) {
-            ctaText = 'Terkini';
+            ctaText = 'Current';
             disabled = true;
         } else if (isLower) {
-            ctaText = 'Tidak Tersedia';
+            ctaText = 'Unavailable';
             disabled = true;
         } else {
-            ctaText = t.price_rm === 0 ? 'Mula Percuma' : 'Pilih';
+            ctaText = t.price_rm === 0 ? 'Start Free' : 'Select';
         }
         var featuresHtml = '';
         for (var j = 0; j < t.features.length; j++) {
@@ -325,7 +334,7 @@ function buildPricingCards(tiers, currentTier) {
         html += '<div class="pricing-card' + (isCurrent ? ' pricing-current' : '') + (isLower ? ' pricing-lower' : '') + '">';
         html += '<h3 class="pricing-name">' + t.name + '</h3>';
         html += '<div class="pricing-price">' + priceText + '</div>';
-        html += '<p class="pricing-limit">' + t.daily_limit + ' emel / hari</p>';
+        html += '<p class="pricing-limit">' + t.daily_limit + ' emails / day</p>';
         html += '<ul class="pricing-features">' + featuresHtml + '</ul>';
         html += '<button class="pricing-btn' + (disabled ? ' pricing-btn-disabled' : '') + '" onclick="upgradeSubscription(\'' + t.id + '\')"' + (disabled ? ' disabled' : '') + '>' + ctaText + '</button>';
         html += '</div>';
@@ -511,21 +520,11 @@ function debounce(fn, delay) {
 var transformText = debounce(function transformTextInternal() {
     if (state.isTransforming) return;
 
-    if (!state.idToken && firebaseAuth) {
-        var guestUsed = localStorage.getItem('prosepolish-guest-used');
-        if (guestUsed) {
-            showGuestLimitModal();
-            return;
-        }
-    }
-
     var casualText = dom.casualInput.value.trim();
     if (!casualText) {
         showToast('Please enter some text first', 'error');
         return;
     }
-
-    var isGuest = !state.idToken && firebaseAuth;
 
     state.isTransforming = true;
     dom.transformBtn.disabled = true;
@@ -552,6 +551,8 @@ var transformText = debounce(function transformTextInternal() {
     var headers = { 'Content-Type': 'application/json' };
     if (state.idToken) {
         headers['Authorization'] = 'Bearer ' + state.idToken;
+    } else {
+        headers['X-Anonymous-UID'] = getAnonymousUid();
     }
 
     fetch(API_BASE_URL + '/api/transform', {
@@ -562,7 +563,13 @@ var transformText = debounce(function transformTextInternal() {
         .then(function (response) {
             if (response.status === 429) {
                 return response.json().then(function (d) {
-                    showToast(d.detail || 'Daily limit reached', 'error');
+                    var detail = d.detail || 'Daily limit reached';
+                    if (!state.idToken && firebaseAuth) {
+                        // Guest hit their 1/day limit — show registration popup
+                        showGuestLimitModal();
+                    } else {
+                        showToast(detail, 'error');
+                    }
                     throw new Error('LIMIT');
                 });
             }
@@ -580,10 +587,6 @@ var transformText = debounce(function transformTextInternal() {
         .then(function (data) {
             if (data) updateUI(data);
             fetchSubscription();
-            if (isGuest) {
-                localStorage.setItem('prosepolish-guest-used', '1');
-                showToast('Free trial used. Sign up to unlock 5 free emails every day!', 'success');
-            }
         })
         .catch(function (err) {
             if (err.message === 'AUTH') {

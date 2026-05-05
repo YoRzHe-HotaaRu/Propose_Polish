@@ -66,8 +66,9 @@ async def health():
 
 @app.get("/api/subscription", response_model=SubscriptionInfo)
 async def get_subscription(user: dict = Depends(get_current_user)):
-    uid = user.get("uid", "anonymous")
-    status = check_subscription(uid)
+    uid = user.get("uid", "guest_legacy")
+    is_guest = user.get("is_guest", True)
+    status = check_subscription(uid, is_guest)
     return SubscriptionInfo(
         tiers=SUBSCRIPTION_TIERS_LIST,
         current_tier=status["tier"],
@@ -87,13 +88,16 @@ async def upgrade_subscription(tier: str, user: dict = Depends(get_current_user)
 
 @app.post("/api/transform", response_model=TransformResponse)
 async def transform_email(req: TransformRequest, user: dict = Depends(get_current_user)):
-    uid = user.get("uid", "anonymous")
-    sub = check_subscription(uid)
+    uid = user.get("uid", "guest_legacy")
+    is_guest = user.get("is_guest", True)
+    sub = check_subscription(uid, is_guest)
     if not sub["allowed"]:
-        raise HTTPException(
-            status_code=429,
-            detail=f"Daily limit reached ({sub['daily_usage']}/{sub['daily_limit']}). Upgrade to continue."
-        )
+        detail = f"Daily limit reached ({sub['daily_usage']}/{sub['daily_limit']})."
+        if is_guest:
+            detail += " Create a free account to unlock 5 emails/day."
+        else:
+            detail += " Upgrade to continue."
+        raise HTTPException(status_code=429, detail=detail)
 
     result = await pipeline.transform(
         text=req.text,
