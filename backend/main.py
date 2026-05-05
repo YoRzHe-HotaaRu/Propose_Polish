@@ -1,8 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Literal
 from agents.pipeline import EmailPipeline
+from auth import (
+    get_current_user, check_subscription, increment_usage,
+    SUBSCRIPTION_TIERS_LIST, set_user_tier
+)
 
 app = FastAPI(title="Informal-to-Professional Email Drafter")
 
@@ -41,19 +45,64 @@ class TransformResponse(BaseModel):
     error: str | None = None
 
 
+class SubscriptionStatus(BaseModel):
+    tier: str
+    tier_name: str
+    daily_usage: int
+    daily_limit: int
+    allowed: bool
+
+
+class SubscriptionInfo(BaseModel):
+    tiers: list[dict]
+    current_tier: str
+    current_usage: int
+
+
 @app.get("/api/health")
 async def health():
     return {"status": "ok"}
 
 
+@app.get("/api/subscription", response_model=SubscriptionInfo)
+async def get_subscription(user: dict = Depends(get_current_user)):
+    uid = user.get("uid", "anonymous")
+    status = check_subscription(uid)
+    return SubscriptionInfo(
+        tiers=SUBSCRIPTION_TIERS_LIST,
+        current_tier=status["tier"],
+        current_usage=status["daily_usage"],
+    )
+
+
+@app.post("/api/subscription/upgrade")
+async def upgrade_subscription(tier: str, user: dict = Depends(get_current_user)):
+    uid = user.get("uid", "anonymous")
+    valid_tiers = [t["id"] for t in SUBSCRIPTION_TIERS_LIST]
+    if tier not in valid_tiers:
+        raise HTTPException(status_code=400, detail=f"Invalid tier. Choose: {', '.join(valid_tiers)}")
+    set_user_tier(uid, tier)
+    return {"status": "ok", "tier": tier}
+
+
 @app.post("/api/transform", response_model=TransformResponse)
-async def transform_email(req: TransformRequest):
+async def transform_email(req: TransformRequest, user: dict = Depends(get_current_user)):
+    uid = user.get("uid", "anonymous")
+    sub = check_subscription(uid)
+    if not sub["allowed"]:
+        raise HTTPException(
+            status_code=429,
+            detail=f"Daily limit reached ({sub['daily_usage']}/{sub['daily_limit']}). Upgrade to continue."
+        )
+
     result = await pipeline.transform(
         text=req.text,
         tone=req.tone,
         length=req.length,
         recipient=req.recipient,
     )
+    increment_usage(uid)
+
     return TransformResponse(
         original=result.get("original", ""),
         final_email=result.get("final_email", ""),

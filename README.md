@@ -213,6 +213,30 @@ Each agent's system prompt is defined at the top of its file in `backend/agents/
 
 ---
 
+## 💰 Plans & Pricing
+
+Priced in **Ringgit Malaysia (RM)**. Daily limits are calculated from the Gemini 2.5 Flash Lite API cost ($0.10/M input, $0.40/M output), with ~3,700 tokens consumed per email transformation.
+
+| Tier | Price | Emails/day | API Budget | Best for |
+|------|-------|-----------|------------|----------|
+| **Percuma** | RM 0 | 5 | Free | Testing & occasional use |
+| **Pro** | RM 9.90/bln | 50 | ~$1.00 USD | Daily professional use |
+| **Premium** | RM 29.90/bln | 150 | ~$3.00 USD | Heavy users & teams |
+
+### Per-email token breakdown
+
+| Stage | Input | Output |
+|-------|-------|--------|
+| Context Analyzer | ~450 | ~80 |
+| Draft Generator | ~950 | ~400 |
+| Polisher | ~650 | ~400 |
+| QC Checker | ~650 | ~150 |
+| **Total** | **~2,700** | **~1,030** |
+
+Cost per email: (2,700 × $0.10 + 1,030 × $0.40) / 1M = **~$0.00068**
+
+---
+
 ## 📄 License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
