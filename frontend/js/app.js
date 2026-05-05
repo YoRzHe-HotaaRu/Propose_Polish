@@ -30,9 +30,14 @@ let firebaseAuth = null;
 let firebaseDb = null;
 
 try {
-    firebaseApp = firebase.initializeApp(firebaseConfig);
-    firebaseAuth = firebase.auth();
-    firebaseDb = firebase.firestore();
+    var isFileProtocol = window.location.protocol === 'file:';
+    if (isFileProtocol) {
+        console.warn('Login disabled: use HTTP server. Run: python -m http.server 3000 --directory frontend');
+    } else {
+        firebaseApp = firebase.initializeApp(firebaseConfig);
+        firebaseAuth = firebase.auth();
+        firebaseDb = firebase.firestore();
+    }
 } catch (e) {
     console.warn('Firebase not configured. Running in offline mode.', e.message);
 }
@@ -227,6 +232,7 @@ function switchAuthTab(tab) {
 }
 
 function handleLogin(e) {
+    if (!firebaseAuth) { showToast('Login unavailable — use HTTP server', 'error'); return; }
     e.preventDefault();
     var email = $('#login-email').value;
     var password = $('#login-password').value;
@@ -248,6 +254,7 @@ function handleLogin(e) {
 }
 
 function handleSignup(e) {
+    if (!firebaseAuth) { showToast('Signup unavailable — use HTTP server', 'error'); return; }
     e.preventDefault();
     var email = $('#signup-email').value;
     var password = $('#signup-password').value;
@@ -269,6 +276,7 @@ function handleSignup(e) {
 }
 
 function handleGoogleLogin() {
+    if (!firebaseAuth) { showToast('Google login unavailable — use HTTP server', 'error'); return; }
     var provider = new firebase.auth.GoogleAuthProvider();
     firebaseAuth.signInWithPopup(provider)
         .then(function () {
@@ -281,6 +289,7 @@ function handleGoogleLogin() {
 }
 
 function handleLogout() {
+    if (!firebaseAuth) return;
     firebaseAuth.signOut().then(function () {
         showToast('Logged out successfully', 'success');
     });
@@ -633,8 +642,13 @@ function extractSubject(text) {
 }
 
 function generateSubject(analysis) {
-    if (!analysis || !analysis.intent) return null;
-    return 'Regarding your ' + analysis.intent;
+    if (!analysis) return null;
+    if (analysis.suggested_subject) return analysis.suggested_subject;
+    if (analysis.intent) {
+        var intent = analysis.intent.charAt(0).toUpperCase() + analysis.intent.slice(1);
+        return intent + ' — Follow-up';
+    }
+    return null;
 }
 
 function formatAnalysis(analysis) {

@@ -5,6 +5,9 @@ from config import get_firebase_credentials, FIREBASE_PROJECT_ID
 _firebase_app = None
 _firestore_client = None
 
+# In-memory usage fallback when Firestore is not configured
+_memory_usage = {}
+
 # ============================================
 # Subscription Tiers
 # ============================================
@@ -117,7 +120,8 @@ def get_user_tier(uid: str) -> str:
 def get_daily_usage(uid: str) -> int:
     db = _get_firestore()
     if db is None:
-        return 0
+        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        return _memory_usage.get(f"{uid}_{today}", 0)
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     doc = db.collection("usage").document(f"{uid}_{today}").get()
     if doc.exists:
@@ -127,7 +131,10 @@ def get_daily_usage(uid: str) -> int:
 def increment_usage(uid: str) -> int:
     db = _get_firestore()
     if db is None:
-        return 0
+        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        key = f"{uid}_{today}"
+        _memory_usage[key] = _memory_usage.get(key, 0) + 1
+        return _memory_usage[key]
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     ref = db.collection("usage").document(f"{uid}_{today}")
     doc = ref.get()

@@ -10,6 +10,7 @@ Return ONLY a valid JSON object with these keys:
 - "urgency": one of [low, medium, high]
 - "target_tone": a brief string describing the recommended tone (e.g. "polite and professional")
 - "key_points": an array of strings capturing the main points to include in the email
+- "suggested_subject": a natural, concise email subject line (5-12 words) that captures the email's main purpose. Write it IN THE SAME LANGUAGE as the detected language. Do NOT use "Regarding your..." format. E.g. for English: "Quick follow-up on the Q2 report"; for Malay: "Susulan ringkas laporan Q2"
 
 Do not include any text outside the JSON object."""
 
@@ -41,4 +42,5 @@ class ContextAnalyzer:
                 "urgency": "medium",
                 "target_tone": "professional",
                 "key_points": [raw],
+                "suggested_subject": "Follow-up",
             }
