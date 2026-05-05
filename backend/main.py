@@ -25,7 +25,7 @@ class TransformRequest(BaseModel):
     text: str = Field(..., min_length=1, max_length=5000, description="Casual/informal text to transform")
     tone: Literal["formal", "friendly", "persuasive", "diplomatic", "apologetic"] = "formal"
     length: Literal["short", "medium", "long"] = "medium"
-    recipient: Literal["boss", "client", "colleague", "professor", "stranger"] = "colleague"
+    recipient: Literal["boss", "client", "colleague", "professor", "stranger", "customer_service"] = "colleague"
 
 
 class IntermediateStep(BaseModel):

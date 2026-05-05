@@ -31,6 +31,7 @@ RECIPIENT_GUIDELINES = {
     "colleague": "Address collegially. Use 'Hi [Name]' or 'Hello [Name]'. Be collaborative. Close with 'Best' or 'Thanks'.",
     "professor": "Address with academic respect. Use 'Dear Professor [Name]'. Be deferential and precise. Close with 'Respectfully' or 'Best regards'.",
     "stranger": "Address formally. Use 'Dear [Name]' or 'To whom it may concern'. Introduce yourself briefly. Close with 'Sincerely' or 'Kind regards'.",
+    "customer_service": "Address politely to the support team. Use 'Dear Customer Service Team' or 'Hello'. Describe your issue clearly and concisely. Be solution-oriented. Close with 'Thank you for your assistance' or 'Kind regards'.",
 }
 
 
